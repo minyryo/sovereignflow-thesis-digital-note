@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#fbfaf8" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#17161a" media="(prefers-color-scheme: dark)">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="SovereignFlow">
+<meta name="format-detection" content="telephone=no">
+<title>SovereignFlow - Thesis Digital Note</title>
+<meta name="description" content="Research notebook for SovereignFlow: cross-border personal data flow monitoring and enforcement for AI pipelines.">
+<link rel="stylesheet" href="assets/css/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🗺️</text></svg>">
+</head>
+<body>
+
+<!-- ============================== HOME ============================== -->
+<main id="view-home" class="view">
+  <section class="hero">
+    <p class="hero__kicker">HCMUT · HK261-262 · Thesis notebook</p>
+
+    <a class="hero__titlelink" href="#/map/methods" id="titleLink"
+       aria-label="Open the thesis mindmap">
+      <h1 class="hero__title">
+        <span class="hero__project">SovereignFlow</span>
+        <span class="hero__full">Research and development of a cross-border personal data
+        flow monitoring and enforcement system for AI</span>
+      </h1>
+      <span class="hero__cta">
+        <span class="hero__ctaicon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+            <circle cx="12" cy="12" r="2.6"/>
+            <path d="M14.6 12h4.2M5.2 7.6h3.4M5.2 16.4h3.4M9.6 11.1 8.6 7.6M9.6 12.9l-1 3.5"/>
+            <circle cx="20.2" cy="12" r="1.6"/><circle cx="3.8" cy="7.6" r="1.6"/>
+            <circle cx="3.8" cy="16.4" r="1.6"/>
+          </svg>
+        </span>
+        Open the mindmap
+      </span>
+    </a>
+
+    <p class="hero__scroll" aria-hidden="true">
+      <span>scroll for the week-by-week record</span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+        <path d="M12 5v14M6 13l6 6 6-6"/>
+      </svg>
+    </p>
+  </section>
+
+  <section class="timeline" id="timeline" aria-labelledby="timelineHeading">
+    <header class="timeline__head">
+      <h2 id="timelineHeading">What changed, week by week</h2>
+      <p class="timeline__note">
+        Newest first. Each entry is one week's new finding; hover or focus an entry to reveal its
+        proof link. Entries marked <span class="chip chip--auto">auto</span> fall back to that
+        week's latest commit because no summary was written by hand yet.
+      </p>
+    </header>
+    <ol class="timeline__list" id="timelineList"></ol>
+  </section>
+
+  <footer class="foot">
+    <p>Built from <code>thesis-artifacts</code>. Proof links point at the commit history -
+    they resolve only for people with access to the repository.</p>
+  </footer>
+</main>
+
+<!-- ============================== MINDMAP ============================== -->
+<div id="view-map" class="view view--map" hidden>
+  <header class="maphead">
+    <a class="maphead__back" href="#/" aria-label="Back to the timeline">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+        <path d="M15 5l-7 7 7 7"/>
+      </svg>
+      <span>Home</span>
+    </a>
+
+    <nav class="modes" id="modes" aria-label="Mindmap modes"></nav>
+
+    <div class="maphead__tools">
+      <button type="button" class="iconbtn iconbtn--wide" data-scene="title">Title breakdown</button>
+      <button type="button" class="iconbtn iconbtn--wide" data-scene="axes3d">3 axes in 3D</button>
+      <span class="maphead__sep" aria-hidden="true"></span>
+      <button type="button" class="iconbtn" id="zoomOut" aria-label="Zoom out">−</button>
+      <button type="button" class="iconbtn" id="zoomFit" aria-label="Fit to view">Fit</button>
+      <button type="button" class="iconbtn" id="zoomIn" aria-label="Zoom in">+</button>
+    </div>
+  </header>
+
+  <p class="modedesc" id="modeDesc"></p>
+
+  <div class="mapwrap">
+    <div class="mapstage" id="mapStage">
+      <svg id="mapSvg" role="img" aria-labelledby="mapSvgTitle">
+        <title id="mapSvgTitle">Thesis mindmap</title>
+        <g id="mapLinks"></g>
+        <g id="mapNodes"></g>
+      </svg>
+      <p class="maphint">Drag to pan · scroll to zoom · hover a node for detail · click to pin it</p>
+    </div>
+
+    <aside class="panel" id="panel" aria-live="polite">
+      <button type="button" class="panel__close" id="panelClose" aria-label="Close detail">✕</button>
+      <div class="panel__empty" id="panelEmpty">
+        <h2>Pick a node</h2>
+        <p>Hover any node to preview it here. Click to pin it so you can read the reference and
+        copy the citation.</p>
+      </div>
+      <div class="panel__body" id="panelBody" hidden></div>
+    </aside>
+  </div>
+</div>
+
+<!-- ============================== SCENE OVERLAY ============================== -->
+<div id="scene" class="scene" hidden role="dialog" aria-modal="true" aria-labelledby="sceneTitle">
+  <div class="scene__backdrop" id="sceneBackdrop"></div>
+  <div class="scene__sheet">
+    <header class="scene__head">
+      <h2 id="sceneTitle"></h2>
+      <button type="button" class="iconbtn" id="sceneClose" aria-label="Close">✕</button>
+    </header>
+    <div id="sceneHost" class="scene__host"></div>
+  </div>
+</div>
+
+<script src="data/refs.js"></script>
+<script src="data/mindmap.js"></script>
+<!-- overrides THESIS_MINDMAP.methods from the markdown source; see tools/build_methods.py -->
+<script src="data/methods.generated.js"></script>
+<script src="data/timeline.js"></script>
+<script src="assets/js/timeline.js"></script>
+<script src="assets/js/mindmap.js"></script>
+<script src="assets/js/scenes.js"></script>
+<script src="assets/js/app.js"></script>
+</body>
+</html>

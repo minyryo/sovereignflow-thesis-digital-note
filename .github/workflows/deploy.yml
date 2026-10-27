@@ -1,0 +1,90 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# Pages needs these three. contents:read lets the job check out the repo.
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# One deploy at a time. Don't cancel a run that is mid-publish.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: JavaScript parses
+        run: |
+          fail=0
+          for f in assets/js/*.js data/*.js; do
+            if node --check "$f"; then echo "ok    $f"; else echo "FAIL  $f"; fail=1; fi
+          done
+          exit $fail
+
+      - name: Hand-edited JSON is valid
+        run: |
+          for f in $(find data -name '*.json'); do
+            python3 -c "import json,sys; json.load(open('$f'))" && echo "ok    $f"
+          done
+
+      - name: Required files are present
+        run: |
+          fail=0
+          # .nojekyll is intentionally zero bytes, so test existence, not size.
+          if [ -f .nojekyll ]; then echo "ok    .nojekyll"; else echo "MISSING: .nojekyll"; fail=1; fi
+          for f in index.html assets/css/style.css \
+                   data/refs.js data/mindmap.js data/timeline.js data/methods.generated.js; do
+            if [ -s "$f" ]; then echo "ok    $f"; else echo "MISSING or empty: $f"; fail=1; fi
+          done
+          exit $fail
+
+      - name: Data files define their globals
+        run: |
+          grep -q 'window.THESIS_REFS'     data/refs.js
+          grep -q 'window.THESIS_MINDMAP'  data/mindmap.js
+          grep -q 'window.THESIS_TIMELINE' data/timeline.js
+          grep -q 'THESIS_MINDMAP.methods' data/methods.generated.js
+          echo "all globals present"
+
+      - name: No root-relative asset paths
+        # A project site is served from /<repo>/, so src="/x" or href="/x"
+        # would 404 there while working fine locally. Catch it before deploy.
+        run: |
+          if grep -nE '(src|href)="/[^/]' index.html; then
+            echo "Found a root-relative path. Use a relative path instead."
+            exit 1
+          fi
+          echo "all asset paths are relative"
+
+  deploy:
+    needs: verify
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/configure-pages@v5
+
+      - name: Upload site
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '.'
+
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v4

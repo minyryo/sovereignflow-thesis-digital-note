@@ -1,0 +1,28 @@
+{
+  "_README": [
+    "Hand-written weekly findings. This file is the one you edit.",
+    "A week listed here overrides the commit-message fallback.",
+    "Any week you leave out uses that week's latest commit as the summary",
+    "and its commit URL as the proof link.",
+    "",
+    "After editing, run:  python3 tools/build_timeline.py",
+    "",
+    "FIELDS",
+    "  week     plan week number (W1 = Monday 2026-09-07). Required.",
+    "  summary  the week's new finding, one sentence. Required.",
+    "  detail   optional second line.",
+    "  label    overrides the 'W03' chip.",
+    "  from/to  override the date range (ISO yyyy-mm-dd).",
+    "  proof    { url, label, sha } - omit `url` to inherit that week's",
+    "           latest commit link automatically."
+  ],
+
+  "events": [
+    {
+      "week": 3,
+      "summary": "Vietnamese NER was benchmarked across four VLSP campaigns and grew from 3 to 40 entity categories, yet no campaign includes a statutory personal-data identifier type.",
+      "detail": "Strongest single piece of evidence for G1a: the field had ample opportunity and still did not cover CCCD / MST / BHXH / plates. Also restated the gap as a falsifiable negative claim requiring a recorded search, not an assertion.",
+      "proof": {}
+    }
+  ]
+}
